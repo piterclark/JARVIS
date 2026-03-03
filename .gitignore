@@ -25,6 +25,7 @@ credentials.json
 token.json
 token_write.json
 settings.local.json
+gcp-oauth.keys.json
 
 # === MCP & CLAUDE RUNTIME ===
 .mcp.json

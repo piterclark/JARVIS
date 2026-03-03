@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MEGA BRAIN — O Sistema de Inteligência Operacional</title>
+  <style>
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #07070f;
+      --bg2:      #0d0d1a;
+      --bg3:      #12122a;
+      --purple:   #7c3aed;
+      --purple2:  #a855f7;
+      --cyan:     #06b6d4;
+      --cyan2:    #22d3ee;
+      --gold:     #f59e0b;
+      --gold2:    #fbbf24;
+      --green:    #10b981;
+      --red:      #ef4444;
+      --text:     #e2e8f0;
+      --muted:    #94a3b8;
+      --border:   rgba(255,255,255,0.08);
+      --card:     rgba(255,255,255,0.04);
+      --glow-p:   rgba(124,58,237,0.4);
+      --glow-c:   rgba(6,182,212,0.4);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ============================================================
+       ANIMATED BACKGROUND GRID
+    ============================================================ */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(124,58,237,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124,58,237,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ============================================================
+       UTILITIES
+    ============================================================ */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .tag {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .tag--purple { background: rgba(124,58,237,0.15); color: var(--purple2); border: 1px solid rgba(124,58,237,0.3); }
+    .tag--cyan   { background: rgba(6,182,212,0.15);  color: var(--cyan2);   border: 1px solid rgba(6,182,212,0.3);  }
+    .tag--gold   { background: rgba(245,158,11,0.15); color: var(--gold2);   border: 1px solid rgba(245,158,11,0.3); }
+
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 600px;
+    }
+    .section-header { text-align: center; margin-bottom: 64px; }
+    .section-header .section-sub { margin: 0 auto; }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--purple2), var(--cyan2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text--gold {
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    section { position: relative; z-index: 1; padding: 100px 0; }
+
+    /* ============================================================
+       NAV
+    ============================================================ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 16px 24px;
+      background: rgba(7,7,15,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-size: 1.2rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      background: linear-gradient(135deg, var(--purple2), var(--cyan2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Orb glow behind hero */
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-content { text-align: center; position: relative; z-index: 2; }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      border-radius: 999px;
+      background: rgba(124,58,237,0.1);
+      border: 1px solid rgba(124,58,237,0.25);
+      font-size: 0.85rem;
+      color: var(--purple2);
+      letter-spacing: 1px;
+      font-weight: 600;
+      margin-bottom: 32px;
+      animation: fadeInDown .6s ease both;
+    }
+    .hero-eyebrow .dot {
+      width: 7px; height: 7px;
+      background: var(--purple2);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .hero-title {
+      font-size: clamp(3.5rem, 9vw, 8rem);
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 0.95;
+      margin-bottom: 24px;
+      animation: fadeInDown .7s ease .1s both;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      color: var(--muted);
+      max-width: 680px;
+      margin: 0 auto 48px;
+      animation: fadeInDown .7s ease .2s both;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeInDown .7s ease .3s both;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all .2s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--purple), var(--purple2));
+      color: #fff;
+      box-shadow: 0 0 30px rgba(124,58,237,0.4);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(124,58,237,0.6); }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-ghost:hover { border-color: var(--purple2); background: rgba(124,58,237,0.05); }
+
+    /* Hero stats */
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-top: 80px;
+      padding-top: 48px;
+      border-top: 1px solid var(--border);
+      animation: fadeInDown .7s ease .4s both;
+      flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--purple2), var(--cyan2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-label { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+
+    /* ============================================================
+       SECTION: PROBLEMA
+    ============================================================ */
+    #problema { background: var(--bg); }
+
+    .problema-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 48px;
+    }
+    @media(max-width: 768px){ .problema-grid { grid-template-columns: 1fr; } }
+
+    .problema-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .3s, transform .3s;
+    }
+    .problema-card:hover { border-color: rgba(124,58,237,0.4); transform: translateY(-4px); }
+    .problema-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--purple), var(--cyan));
+    }
+    .problema-card .icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+    .icon-p { background: rgba(124,58,237,0.15); }
+    .icon-c { background: rgba(6,182,212,0.15); }
+    .icon-g { background: rgba(245,158,11,0.15); }
+    .icon-r { background: rgba(239,68,68,0.15); }
+    .problema-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 10px; }
+    .problema-card p { color: var(--muted); font-size: 0.95rem; }
+
+    /* Dunning-Krueger visual */
+    .krueger-box {
+      margin-top: 64px;
+      background: var(--card);
+      border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 24px;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .krueger-box::before {
+      content: '⚠';
+      position: absolute;
+      right: 32px; top: 32px;
+      font-size: 2rem;
+      opacity: .3;
+    }
+    .krueger-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--gold2);
+      margin-bottom: 12px;
+    }
+    .krueger-text { color: var(--muted); font-size: 1rem; max-width: 700px; }
+
+    .krueger-stages {
+      display: flex;
+      gap: 0;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+    .krueger-stage {
+      flex: 1;
+      min-width: 180px;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+    }
+    .krueger-stage:not(:last-child)::after {
+      content: '→';
+      position: absolute;
+      right: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 1.2rem;
+    }
+    .ks-emoji { font-size: 2.5rem; display: block; margin-bottom: 8px; }
+    .ks-label { font-size: 0.8rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+    .ks-desc { font-size: 0.85rem; color: var(--text); margin-top: 6px; }
+
+    /* ============================================================
+       SECTION: POR QUE IA FALHA
+    ============================================================ */
+    #ia-falha { background: var(--bg2); }
+
+    .ia-compare {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 24px;
+      align-items: center;
+      margin-top: 48px;
+    }
+    @media(max-width:768px){ .ia-compare { grid-template-columns: 1fr; } }
+
+    .ia-card {
+      border-radius: 20px;
+      padding: 36px;
+      border: 1px solid var(--border);
+    }
+    .ia-card--bad {
+      background: rgba(239,68,68,0.05);
+      border-color: rgba(239,68,68,0.2);
+    }
+    .ia-card--good {
+      background: rgba(124,58,237,0.05);
+      border-color: rgba(124,58,237,0.3);
+      box-shadow: 0 0 40px rgba(124,58,237,0.1);
+    }
+    .ia-card-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .ia-card--bad .ia-card-label { color: var(--red); }
+    .ia-card--good .ia-card-label { color: var(--purple2); }
+    .ia-card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 12px; }
+    .ia-card p { color: var(--muted); font-size: 0.95rem; margin-bottom: 16px; }
+    .ia-vs {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--muted);
+    }
+    .ia-list { list-style: none; }
+    .ia-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .ia-list li:last-child { border-bottom: none; }
+    .ia-list li .check { flex-shrink: 0; font-size: 1rem; }
+
+    .ia-highlight {
+      margin-top: 48px;
+      background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(6,182,212,0.1));
+      border: 1px solid rgba(124,58,237,0.25);
+      border-radius: 20px;
+      padding: 32px;
+      text-align: center;
+    }
+    .ia-highlight blockquote {
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      font-weight: 700;
+      font-style: italic;
+      color: var(--text);
+    }
+    .ia-highlight cite {
+      display: block;
+      margin-top: 12px;
+      color: var(--purple2);
+      font-size: 0.85rem;
+      font-style: normal;
+    }
+
+    /* ============================================================
+       SECTION: PIPELINE / WORKFLOW
+    ============================================================ */
+    #pipeline { background: var(--bg); }
+
+    .pipeline-wrapper {
+      position: relative;
+      margin-top: 64px;
+    }
+
+    /* Horizontal flow */
+    .pipeline-steps {
+      display: flex;
+      gap: 0;
+      align-items: stretch;
+      overflow-x: auto;
+      padding-bottom: 16px;
+    }
+
+    .pipeline-step {
+      flex: 1;
+      min-width: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .pipeline-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0; top: 44px;
+      width: 40px; height: 2px;
+      background: linear-gradient(90deg, var(--purple2), var(--cyan2));
+      z-index: 2;
+    }
+
+    .ps-circle {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin-bottom: 16px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+      position: relative;
+      transition: transform .3s;
+    }
+    .ps-circle:hover { transform: scale(1.1); }
+
+    .ps-1 { background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(124,58,237,0.05)); border-color: rgba(124,58,237,0.4); }
+    .ps-2 { background: linear-gradient(135deg, rgba(6,182,212,0.2), rgba(6,182,212,0.05)); border-color: rgba(6,182,212,0.4); }
+    .ps-3 { background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(245,158,11,0.05)); border-color: rgba(245,158,11,0.4); }
+    .ps-4 { background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(16,185,129,0.05)); border-color: rgba(16,185,129,0.4); }
+    .ps-5 { background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(168,85,247,0.05)); border-color: rgba(168,85,247,0.4); }
+    .ps-6 { background: linear-gradient(135deg, rgba(34,211,238,0.2), rgba(34,211,238,0.05)); border-color: rgba(34,211,238,0.4); }
+    .ps-7 { background: linear-gradient(135deg, rgba(245,158,11,0.3), rgba(245,158,11,0.1)); border-color: var(--gold); }
+
+    .ps-number {
+      position: absolute;
+      top: -8px; right: -8px;
+      width: 22px; height: 22px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted);
+    }
+
+    .ps-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-align: center;
+      color: var(--text);
+      letter-spacing: 0.5px;
+    }
+    .ps-desc {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 6px;
+      padding: 0 8px;
+    }
+
+    /* Input types */
+    .input-types {
+      display: flex;
+      gap: 12px;
+      margin-top: 48px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .input-chip {
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--card);
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* ============================================================
+       SECTION: DNA COGNITIVO
+    ============================================================ */
+    #dna { background: var(--bg2); }
+
+    .dna-intro {
+      max-width: 700px;
+      margin: 0 auto 64px;
+      text-align: center;
+    }
+
+    .dna-layers {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .dna-layer {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 32px;
+      transition: all .3s;
+      cursor: default;
+    }
+    .dna-layer:hover {
+      border-color: rgba(124,58,237,0.4);
+      background: rgba(124,58,237,0.05);
+      transform: translateX(8px);
+    }
+    .dna-layer-num {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .dl-1 { background: rgba(124,58,237,0.2); color: var(--purple2); }
+    .dl-2 { background: rgba(6,182,212,0.2);  color: var(--cyan2);   }
+    .dl-3 { background: rgba(245,158,11,0.2); color: var(--gold2);   }
+    .dl-4 { background: rgba(16,185,129,0.2); color: var(--green);   }
+    .dl-5 { background: rgba(168,85,247,0.2); color: #c084fc;        }
+
+    .dna-layer-content { flex: 1; }
+    .dna-layer-name { font-weight: 800; font-size: 1.05rem; margin-bottom: 4px; }
+    .dna-layer-desc { color: var(--muted); font-size: 0.9rem; }
+    .dna-layer-tag { flex-shrink: 0; }
+
+    /* ============================================================
+       SECTION: AGENTES
+    ============================================================ */
+    #agentes { background: var(--bg); }
+
+    .agentes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .agente-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      transition: all .3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .agente-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    .agente-card:nth-child(1)::after { background: linear-gradient(90deg, var(--purple), var(--purple2)); }
+    .agente-card:nth-child(2)::after { background: linear-gradient(90deg, var(--cyan), var(--cyan2)); }
+    .agente-card:nth-child(3)::after { background: linear-gradient(90deg, var(--gold), var(--gold2)); }
+    .agente-card:nth-child(4)::after { background: linear-gradient(90deg, var(--green), #34d399); }
+
+    .agente-card:hover { border-color: rgba(124,58,237,0.3); transform: translateY(-6px); }
+    .agente-icon { font-size: 3rem; margin-bottom: 20px; display: block; }
+    .agente-type { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .agente-name { font-size: 1.3rem; font-weight: 800; margin-bottom: 12px; }
+    .agente-desc { color: var(--muted); font-size: 0.9rem; margin-bottom: 20px; }
+    .agente-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .agente-tag {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* ============================================================
+       SECTION: JARVIS / OUTPUT
+    ============================================================ */
+    #output { background: var(--bg2); }
+
+    .jarvis-showcase {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      margin-top: 48px;
+    }
+    @media(max-width:768px){ .jarvis-showcase { grid-template-columns: 1fr; } }
+
+    .jarvis-terminal {
+      background: #0a0a14;
+      border: 1px solid rgba(124,58,237,0.3);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 60px rgba(124,58,237,0.15);
+    }
+    .terminal-bar {
+      background: rgba(124,58,237,0.1);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(124,58,237,0.2);
+    }
+    .t-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .t-dot-1 { background: var(--red); }
+    .t-dot-2 { background: var(--gold); }
+    .t-dot-3 { background: var(--green); }
+    .terminal-name { font-size: 0.8rem; color: var(--muted); margin-left: 8px; font-family: monospace; }
+    .terminal-body { padding: 24px; font-family: 'Courier New', monospace; font-size: 0.85rem; line-height: 1.8; }
+    .t-line { display: flex; gap: 12px; }
+    .t-prompt { color: var(--purple2); flex-shrink: 0; }
+    .t-cmd { color: var(--text); }
+    .t-response { color: var(--cyan2); padding-left: 24px; }
+    .t-highlight { color: var(--gold2); }
+    .t-cursor {
+      display: inline-block;
+      width: 8px; height: 14px;
+      background: var(--purple2);
+      animation: blink 1s infinite;
+      vertical-align: text-bottom;
+    }
+
+    .jarvis-features { display: flex; flex-direction: column; gap: 20px; }
+    .jf-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .jf-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: rgba(124,58,237,0.1);
+      border: 1px solid rgba(124,58,237,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .jf-content h4 { font-weight: 700; margin-bottom: 4px; }
+    .jf-content p { color: var(--muted); font-size: 0.9rem; }
+
+    /* ============================================================
+       SECTION: VÍDEO
+    ============================================================ */
+    #video { background: var(--bg); }
+
+    .video-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(124,58,237,0.3);
+      box-shadow: 0 0 80px rgba(124,58,237,0.2);
+    }
+    .video-wrapper iframe {
+      width: 100%;
+      aspect-ratio: 16/9;
+      display: block;
+      border: none;
+    }
+    .video-caption {
+      text-align: center;
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* ============================================================
+       SECTION: CTA
+    ============================================================ */
+    #cta {
+      background: var(--bg);
+      text-align: center;
+      padding: 120px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    #cta::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%);
+    }
+    .cta-content { position: relative; z-index: 2; }
+    .cta-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 900;
+      margin-bottom: 20px;
+    }
+    .cta-sub {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 550px;
+      margin: 0 auto 48px;
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      position: relative; z-index: 1;
+    }
+    footer .footer-logo {
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      background: linear-gradient(135deg, var(--purple2), var(--cyan2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+
+    /* ============================================================
+       ANIMATIONS
+    ============================================================ */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: .5; transform: scale(1.3); }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-12px); }
+    }
+    @keyframes flowPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(124,58,237,0.3); }
+      50%       { box-shadow: 0 0 40px rgba(124,58,237,0.6); }
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============================================================
+       SCROLLBAR
+    ============================================================ */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.4); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--purple2); }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAV
+  ============================================================ -->
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-logo">⚡ MEGA BRAIN</div>
+      <div class="nav-links">
+        <a href="#problema">O Problema</a>
+        <a href="#pipeline">Como Funciona</a>
+        <a href="#agentes">Agentes</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-content">
+
+        <div class="hero-eyebrow">
+          <span class="dot"></span>
+          Sistema de Inteligência Operacional
+        </div>
+
+        <h1 class="hero-title">
+          <span class="gradient-text">MEGA</span><br>
+          <span style="color:var(--text)">BRAIN</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Imagine ter os maiores especialistas do mundo trabalhando para você,
+          24h por dia, com contexto total do seu negócio.
+          <strong style="color:var(--text)">Isso é o Mega Brain.</strong>
+        </p>
+
+        <div class="hero-cta">
+          <a href="#pipeline" class="btn btn-primary">▶ Ver Como Funciona</a>
+          <a href="#pipeline" class="btn btn-ghost">Ver Como Funciona →</a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-number">2.000h+</div>
+            <div class="stat-label">De Conteúdo Expert Processado</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">37</div>
+            <div class="stat-label">Agentes Especializados</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">5</div>
+            <div class="stat-label">Camadas de DNA Cognitivo</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">Respostas Operacionais</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PROBLEMA
+  ============================================================ -->
+  <section id="problema">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="tag tag--cyan" style="margin-bottom:16px">O Problema</div>
+        <h2 class="section-title">Quanto mais você cresce,<br><span class="gradient-text">mais impossível fica fazer tudo</span></h2>
+        <p class="section-sub">
+          Todo empresário chega no mesmo ponto: seu negócio precisa de muito mais do que você consegue entregar sozinho.
+        </p>
+      </div>
+
+      <div class="problema-grid reveal">
+        <div class="problema-card">
+          <div class="icon icon-p">💡</div>
+          <h3>Conceber o Produto</h3>
+          <p>Criar e evoluir o produto exige dedicação total. Sozinho, você não tem tempo para pensar enquanto opera.</p>
+        </div>
+        <div class="problema-card">
+          <div class="icon icon-c">📣</div>
+          <h3>Fazer o Marketing</h3>
+          <p>Marketing e Vendas são coisas completamente separadas. Você não pode ser bom nos dois ao mesmo tempo.</p>
+        </div>
+        <div class="problema-card">
+          <div class="icon icon-g">💰</div>
+          <h3>Vender o Produto</h3>
+          <p>Vender exige scripts, conversões, follow-ups. Um detalhe errado custa 391% das suas chances de fechar.</p>
+        </div>
+        <div class="problema-card">
+          <div class="icon icon-r">🤝</div>
+          <h3>Cuidar do Cliente</h3>
+          <p>Customer Experience é o que mantém o negócio vivo. Sem CS, você perde clientes mais rápido do que ganha.</p>
+        </div>
+      </div>
+
+      <!-- Efeito Danny Krueger -->
+      <div class="krueger-box reveal">
+        <div class="krueger-title">⚡ O Efeito Danny Krueger — A Armadilha do Crescimento</div>
+        <p class="krueger-text">
+          Quando você começa, acha que é fácil. Mas conforme seu negócio cresce, percebe que sabe cada vez menos.
+          A maioria desiste ou se distrai. Os que persistem descobrem que existe sempre um próximo nível.
+        </p>
+        <div class="krueger-stages">
+          <div class="krueger-stage">
+            <span class="ks-emoji">😎</span>
+            <span class="ks-label">Nível 1</span>
+            <div class="ks-desc">Curadoria — aprende com os melhores</div>
+          </div>
+          <div class="krueger-stage">
+            <span class="ks-emoji">📝</span>
+            <span class="ks-label">Nível 2</span>
+            <div class="ks-desc">Anotação — registra o conhecimento</div>
+          </div>
+          <div class="krueger-stage">
+            <span class="ks-emoji">🚀</span>
+            <span class="ks-label">Nível 3</span>
+            <div class="ks-desc">Aplicação — contrata, cria processos</div>
+          </div>
+          <div class="krueger-stage">
+            <span class="ks-emoji">🧠</span>
+            <span class="ks-label" style="color:var(--gold2)">Nível 4</span>
+            <div class="ks-desc" style="color:var(--gold2);font-weight:700">Sistema — Mega Brain entra aqui</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       POR QUE IA FALHA
+  ============================================================ -->
+  <section id="ia-falha">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="tag tag--gold" style="margin-bottom:16px">O Erro Comum</div>
+        <h2 class="section-title">Por que ChatGPT e Claude<br><span class="gradient-text">te dão respostas ruins</span></h2>
+        <p class="section-sub">
+          Não é culpa da IA. O problema é que você está deixando ela navegar em águas que não são suas.
+        </p>
+      </div>
+
+      <div class="ia-compare reveal">
+        <div class="ia-card ia-card--bad">
+          <div class="ia-card-label">❌ IA Sem Contexto</div>
+          <h3>ChatGPT / Claude Puro</h3>
+          <p>Você joga 50.000 palavras de transcrição. O resultado? Uma resposta medíocre que não serve para nada.</p>
+          <ul class="ia-list">
+            <li><span class="check">✗</span> Navega em dados de outras pessoas</li>
+            <li><span class="check">✗</span> Não conhece seu negócio</li>
+            <li><span class="check">✗</span> Não conhece seu mercado</li>
+            <li><span class="check">✗</span> Sem memória entre conversas</li>
+            <li><span class="check">✗</span> Efeito placebo — parece útil, mas não é</li>
+          </ul>
+        </div>
+
+        <div class="ia-vs">VS</div>
+
+        <div class="ia-card ia-card--good">
+          <div class="ia-card-label">✅ Mega Brain</div>
+          <h3>IA com Contexto Total</h3>
+          <p>Como o JARVIS do Tony Stark: sabe quem você é, o que você precisa e como o seu negócio funciona.</p>
+          <ul class="ia-list">
+            <li><span class="check" style="color:var(--green)">✓</span> Contexto do SEU negócio</li>
+            <li><span class="check" style="color:var(--green)">✓</span> DNA cognitivo dos maiores experts</li>
+            <li><span class="check" style="color:var(--green)">✓</span> Respostas operacionais, não genéricas</li>
+            <li><span class="check" style="color:var(--green)">✓</span> Memória acumulada ao longo do tempo</li>
+            <li><span class="check" style="color:var(--green)">✓</span> Calibrado para o mercado brasileiro</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="ia-highlight reveal">
+        <blockquote>
+          "Informação é a moeda mais cara que existe. O Mega Brain faz com que você
+          tenha a mesma pureza de resposta que um expert cobrando U$100/hora —
+          mas disponível para qualquer pergunta, a qualquer momento."
+        </blockquote>
+        <cite>— Mega Brain</cite>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PIPELINE / WORKFLOW
+  ============================================================ -->
+  <section id="pipeline">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="tag tag--purple" style="margin-bottom:16px">Como Funciona</div>
+        <h2 class="section-title">O Pipeline do<br><span class="gradient-text">Mega Brain</span></h2>
+        <p class="section-sub">
+          7 etapas que transformam qualquer conteúdo de expert em inteligência operacional acionável para o seu negócio.
+        </p>
+      </div>
+
+      <!-- Input types -->
+      <div style="text-align:center;margin-bottom:32px" class="reveal">
+        <p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px">Qualquer fonte de conhecimento como input:</p>
+        <div class="input-types">
+          <div class="input-chip">🎥 Vídeos do YouTube</div>
+          <div class="input-chip">🎙️ Podcasts</div>
+          <div class="input-chip">📚 Cursos & Masterminds</div>
+          <div class="input-chip">📄 PDFs & Documentos</div>
+          <div class="input-chip">🎬 Vídeos Pagos</div>
+        </div>
+      </div>
+
+      <!-- Pipeline steps -->
+      <div class="pipeline-wrapper reveal">
+        <div class="pipeline-steps">
+
+          <div class="pipeline-step">
+            <div class="ps-circle ps-1">
+              🎯
+              <span class="ps-number">1</span>
+            </div>
+            <div class="ps-label">CURADORIA</div>
+            <div class="ps-desc">Seleciona os melhores experts do mundo</div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="ps-circle ps-2">
+              🎤
+              <span class="ps-number">2</span>
+            </div>
+            <div class="ps-label">TRANSCRIÇÃO</div>
+            <div class="ps-desc">Whisper AI converte fala em texto</div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="ps-circle ps-3">
+              ✂️
+              <span class="ps-number">3</span>
+            </div>
+            <div class="ps-label">CHUNKING</div>
+            <div class="ps-desc">Divide em blocos inteligentes</div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="ps-circle ps-4">
+              💡
+              <span class="ps-number">4</span>
+            </div>
+            <div class="ps-label">INSIGHTS</div>
+            <div class="ps-desc">Extrai os pontos de maior valor</div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="ps-circle ps-5">
+              🧬
+              <span class="ps-number">5</span>
+            </div>
+            <div class="ps-label">DNA COGNITIVO</div>
+            <div class="ps-desc">5 camadas de conhecimento estruturado</div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="ps-circle ps-6">
+              🤖
+              <span class="ps-number">6</span>
+            </div>
+            <div class="ps-label">AGENTES</div>
+            <div class="ps-desc">Mind clones dos experts criados</div>
+          </div>
+
+          <div class="pipeline-step">
+            <div class="ps-circle ps-7" style="animation: flowPulse 2s infinite;">
+              ⚡
+              <span class="ps-number">7</span>
+            </div>
+            <div class="ps-label" style="color:var(--gold2)">RESULTADO</div>
+            <div class="ps-desc" style="color:var(--gold2)">Respostas operacionais do seu negócio</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       DNA COGNITIVO
+  ============================================================ -->
+  <section id="dna">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="tag tag--purple" style="margin-bottom:16px">DNA Cognitivo</div>
+        <h2 class="section-title">O Conhecimento organizado<br><span class="gradient-text">em 5 camadas</span></h2>
+        <p class="section-sub">
+          Cada expert tem seu DNA Cognitivo. Como um gene que carrega toda a essência do pensamento dele — do mais abstrato ao mais prático.
+        </p>
+      </div>
+
+      <div class="dna-layers">
+
+        <div class="dna-layer reveal">
+          <div class="dna-layer-num dl-1">L1</div>
+          <div class="dna-layer-content">
+            <div class="dna-layer-name">🌌 Filosofias</div>
+            <div class="dna-layer-desc">As crenças fundamentais que guiam o pensamento do expert. O "porquê" mais profundo de tudo que ele faz.</div>
+          </div>
+          <div class="dna-layer-tag"><span class="tag tag--purple">Mais Abstrato</span></div>
+        </div>
+
+        <div class="dna-layer reveal">
+          <div class="dna-layer-num dl-2">L2</div>
+          <div class="dna-layer-content">
+            <div class="dna-layer-name">🧠 Modelos Mentais</div>
+            <div class="dna-layer-desc">As lentes com que ele enxerga o mundo. Formas de pensar e tomar decisões em situações complexas.</div>
+          </div>
+          <div class="dna-layer-tag"><span class="tag tag--cyan">Alta Abstração</span></div>
+        </div>
+
+        <div class="dna-layer reveal">
+          <div class="dna-layer-num dl-3">L3</div>
+          <div class="dna-layer-content">
+            <div class="dna-layer-name">📏 Heurísticas</div>
+            <div class="dna-layer-desc">Regras práticas com números reais. "Se LTV/CAC menor que 3, o problema é o modelo de negócio."</div>
+          </div>
+          <div class="dna-layer-tag"><span class="tag tag--gold">Alta Precisão</span></div>
+        </div>
+
+        <div class="dna-layer reveal">
+          <div class="dna-layer-num dl-4">L4</div>
+          <div class="dna-layer-content">
+            <div class="dna-layer-name">🏗️ Frameworks</div>
+            <div class="dna-layer-desc">Estruturas metodológicas. Os sistemas e processos que o expert usa para resolver problemas recorrentes.</div>
+          </div>
+          <div class="dna-layer-tag"><span class="tag tag--cyan">Estruturado</span></div>
+        </div>
+
+        <div class="dna-layer reveal">
+          <div class="dna-layer-num dl-5">L5</div>
+          <div class="dna-layer-content">
+            <div class="dna-layer-name">⚙️ Metodologias</div>
+            <div class="dna-layer-desc">Passo a passo executável. Você faz a pergunta, o agente entrega o processo exato para implementar.</div>
+          </div>
+          <div class="dna-layer-tag"><span class="tag tag--purple">Mais Concreto</span></div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       AGENTES
+  ============================================================ -->
+  <section id="agentes">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="tag tag--cyan" style="margin-bottom:16px">Os Agentes</div>
+        <h2 class="section-title">Seus especialistas<br><span class="gradient-text">trabalhando 24/7</span></h2>
+        <p class="section-sub">
+          Cada agente é uma mente clonada de um expert. Eles não "sabem" sobre vendas — eles pensam como o Alex Hormozi pensa sobre vendas.
+        </p>
+      </div>
+
+      <div class="agentes-grid">
+
+        <div class="agente-card reveal">
+          <span class="agente-icon">🧬</span>
+          <div class="agente-type">Mind Clones · 5 Agentes</div>
+          <div class="agente-name">Mentes Expert</div>
+          <div class="agente-desc">Clones digitais de especialistas mundiais. Você pergunta ao Hormozi, ao Cole Gordon, ao Sam Ovens — direto, sem filtro.</div>
+          <div class="agente-tags">
+            <span class="agente-tag">Alex Hormozi</span>
+            <span class="agente-tag">Cole Gordon</span>
+            <span class="agente-tag">Sam Ovens</span>
+          </div>
+        </div>
+
+        <div class="agente-card reveal">
+          <span class="agente-icon">💼</span>
+          <div class="agente-type">Cargo Agents · 29 Agentes</div>
+          <div class="agente-name">Agentes de Cargo</div>
+          <div class="agente-desc">CRO, CFO, CMO, Sales Manager, SDR, Closer… cada um com DNA dos melhores experts daquela função no mundo.</div>
+          <div class="agente-tags">
+            <span class="agente-tag">Vendas</span>
+            <span class="agente-tag">Marketing</span>
+            <span class="agente-tag">Financeiro</span>
+            <span class="agente-tag">Operações</span>
+          </div>
+        </div>
+
+        <div class="agente-card reveal">
+          <span class="agente-icon">⚖️</span>
+          <div class="agente-type">Conclave · 3 Agentes</div>
+          <div class="agente-name">Conselho de Decisão</div>
+          <div class="agente-desc">Debate estruturado com múltiplas perspectivas. Crítico, Advogado e Sintetizador chegam juntos ao melhor caminho.</div>
+          <div class="agente-tags">
+            <span class="agente-tag">Crítico</span>
+            <span class="agente-tag">Advogado</span>
+            <span class="agente-tag">Sintetizador</span>
+          </div>
+        </div>
+
+        <div class="agente-card reveal">
+          <span class="agente-icon">🤖</span>
+          <div class="agente-type">Sistema · JARVIS</div>
+          <div class="agente-name">JARVIS — O Orquestrador</div>
+          <div class="agente-desc">O meta-agente que coordena tudo. Gerencia CRM, delega tarefas, gera relatórios e opera por trás das cenas enquanto você dorme.</div>
+          <div class="agente-tags">
+            <span class="agente-tag">Orquestração</span>
+            <span class="agente-tag">CRM</span>
+            <span class="agente-tag">Automação</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       OUTPUT / JARVIS
+  ============================================================ -->
+  <section id="output">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="tag tag--gold" style="margin-bottom:16px">O Resultado</div>
+        <h2 class="section-title">Como o <span class="gradient-text--gold">JARVIS</span> do Tony Stark<br>— mas para o seu negócio</h2>
+        <p class="section-sub">
+          Não é resposta textual. É resposta operacional. Você pergunta, o sistema entrega o processo exato para implementar hoje.
+        </p>
+      </div>
+
+      <div class="jarvis-showcase reveal">
+
+        <!-- Terminal simulado -->
+        <div class="jarvis-terminal">
+          <div class="terminal-bar">
+            <span class="t-dot t-dot-1"></span>
+            <span class="t-dot t-dot-2"></span>
+            <span class="t-dot t-dot-3"></span>
+            <span class="terminal-name">MEGA BRAIN — JARVIS v2.0</span>
+          </div>
+          <div class="terminal-body">
+            <div class="t-line">
+              <span class="t-prompt">você →</span>
+              <span class="t-cmd">Como estruturar meu time de vendas outbound?</span>
+            </div>
+            <br>
+            <div style="color:var(--purple2);font-size:0.8rem;padding-left:0">⚡ Consultando DNA: Alex Hormozi + Cole Gordon...</div>
+            <br>
+            <div class="t-response">
+              <span class="t-highlight">HORMOZI:</span> Use a Christmas Tree Structure:<br>
+              &nbsp;→ BDR (base) → 100 ligações/dia<br>
+              &nbsp;→ SDS (meio) → qualifica e entrega valor<br>
+              &nbsp;→ BC (topo) → fecha
+            </div>
+            <br>
+            <div class="t-response">
+              <span class="t-highlight">COLE GORDON:</span> Para Brasil, ajuste:<br>
+              &nbsp;→ 30 min = 80/20 do faturamento<br>
+              &nbsp;→ Ligue em até 30 min após lead
+            </div>
+            <br>
+            <div class="t-response" style="color:var(--gold2)">
+              → Plano de ação gerado para seu contexto ✓<br>
+              → Próximos passos em operações/JARVIS ✓
+            </div>
+            <br>
+            <span class="t-cursor"></span>
+          </div>
+        </div>
+
+        <!-- Features -->
+        <div class="jarvis-features">
+          <div class="jf-item">
+            <div class="jf-icon">🎯</div>
+            <div class="jf-content">
+              <h4>Respostas Operacionais</h4>
+              <p>Não é "você deveria pensar em…". É "faça isso, hoje, com esses números, para o seu mercado".</p>
+            </div>
+          </div>
+          <div class="jf-item">
+            <div class="jf-icon">🔗</div>
+            <div class="jf-content">
+              <h4>Contexto do Seu Negócio</h4>
+              <p>O sistema conhece seu CAC, LTV, time, mercado, posicionamento. As respostas são calibradas para você.</p>
+            </div>
+          </div>
+          <div class="jf-item">
+            <div class="jf-icon">🚀</div>
+            <div class="jf-content">
+              <h4>Automação Real</h4>
+              <p>Agentes que acessam seu CRM, gerenciam campanhas, fazem SDR calls, postam conteúdo — sem você tocar.</p>
+            </div>
+          </div>
+          <div class="jf-item">
+            <div class="jf-icon">📈</div>
+            <div class="jf-content">
+              <h4>Melhora com o Tempo</h4>
+              <p>Cada conversa adiciona ao contexto. O sistema fica mais inteligente quanto mais você usa.</p>
+            </div>
+          </div>
+          <div class="jf-item">
+            <div class="jf-icon">⚠️</div>
+            <div class="jf-content">
+              <h4>Aviso: Causa Insônia</h4>
+              <p>Das 12 pessoas que tiveram acesso, 100% relataram insônia. Você vai querer o computador ligado o tempo todo.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CTA
+  ============================================================ -->
+  <section id="cta">
+    <div class="container">
+      <div class="cta-content reveal">
+        <div class="tag tag--purple" style="margin-bottom:24px">Próximo Passo</div>
+        <h2 class="cta-title">
+          Pare de deixar dinheiro<br>
+          <span class="gradient-text">na mesa todo mês</span>
+        </h2>
+        <p class="cta-sub">
+          Enquanto você lê isso, seus concorrentes estão operando com IA genérica.
+          Você pode operar com o Mega Brain.
+        </p>
+        <div class="hero-cta">
+          <a href="#cta" class="btn btn-primary" style="font-size:1.05rem;padding:18px 40px">
+            ⚡ Quero o Mega Brain
+          </a>
+          <a href="#pipeline" class="btn btn-ghost">
+            Entender Como Funciona →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer>
+    <div class="footer-logo">⚡ MEGA BRAIN</div>
+    <p>Sistema de Inteligência Operacional — Powered by Claude Code + JARVIS</p>
+    <p style="margin-top:8px;opacity:.5">"Eu invisto meu tempo criando processos que vão criar processos para os próximos anos."</p>
+  </footer>
+
+  <!-- ============================================================
+       JS — Scroll Reveal
+  ============================================================ -->
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Nav active state
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 100) current = s.id;
+      });
+      navLinks.forEach(a => {
+        a.style.color = a.getAttribute('href') === '#' + current
+          ? '#e2e8f0' : '';
+      });
+    });
+  </script>
+
+</body>
+</html>
