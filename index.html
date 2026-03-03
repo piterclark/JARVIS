@@ -825,6 +825,131 @@
     }
 
     /* ============================================================
+       4 NÍVEIS DE IA
+    ============================================================ */
+    #niveis { background: var(--bg2); }
+    .niveis-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 48px;
+    }
+    .nivel-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      transition: transform .3s, box-shadow .3s;
+    }
+    .nivel-card:hover { transform: translateY(-4px); }
+    .nivel-card.nivel-4 {
+      border-color: rgba(245,158,11,0.4);
+      background: rgba(245,158,11,0.05);
+      box-shadow: 0 0 40px rgba(245,158,11,0.15);
+    }
+    .nivel-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 1rem;
+      margin-bottom: 16px;
+    }
+    .nivel-badge-1 { background: rgba(148,163,184,0.15); color: var(--muted); }
+    .nivel-badge-2 { background: rgba(6,182,212,0.15);   color: var(--cyan2); }
+    .nivel-badge-3 { background: rgba(124,58,237,0.15);  color: var(--purple2); }
+    .nivel-badge-4 { background: rgba(245,158,11,0.2);   color: var(--gold2); }
+    .nivel-title { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .nivel-sub   { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+    .nivel-example {
+      margin-top: 12px;
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .nivel-4 .nivel-example {
+      background: rgba(245,158,11,0.08);
+      color: var(--gold2);
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       FONTES / EXPERTS
+    ============================================================ */
+    #fontes { background: var(--bg2); }
+    .fontes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 40px;
+    }
+    .fonte-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 16px;
+      transition: border-color .3s;
+    }
+    .fonte-card:hover { border-color: rgba(124,58,237,0.4); }
+    .fonte-nome { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+    .fonte-area { font-size: 0.78rem; color: var(--muted); }
+    .fontes-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-top: 48px;
+      padding: 32px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+    }
+    .fs-item { text-align: center; }
+    .fs-number { font-size: 2.5rem; font-weight: 800; color: var(--gold2); }
+    .fs-label  { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+
+    /* ============================================================
+       VERSÕES
+    ============================================================ */
+    #versoes { background: var(--bg); }
+    .versoes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 48px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .versao-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px 28px;
+    }
+    .versao-card.versao-premium {
+      border-color: rgba(245,158,11,0.4);
+      background: rgba(245,158,11,0.04);
+    }
+    .versao-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .versao-icon  { font-size: 1.5rem; }
+    .versao-nome  { font-size: 1.15rem; font-weight: 800; }
+    .versao-premium .versao-nome { color: var(--gold2); }
+    .versao-list  { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .versao-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 0.9rem; line-height: 1.4; }
+    .versao-check { flex-shrink: 0; margin-top: 1px; }
+
+    @media (max-width: 640px) {
+      .versoes-grid  { grid-template-columns: 1fr; }
+      .fontes-stats  { flex-direction: column; gap: 24px; }
+    }
+
+    /* ============================================================
        SCROLLBAR
     ============================================================ */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -842,9 +967,11 @@
     <div class="nav-inner">
       <div class="nav-logo">⚡ MEGA BRAIN</div>
       <div class="nav-links">
-        <a href="#problema">O Problema</a>
+        <a href="#niveis">4 Níveis</a>
         <a href="#pipeline">Como Funciona</a>
         <a href="#agentes">Agentes</a>
+        <a href="#fontes">Fontes</a>
+        <a href="#versoes">Versões</a>
       </div>
     </div>
   </nav>
@@ -878,8 +1005,12 @@
 
         <div class="hero-stats">
           <div class="stat">
-            <div class="stat-number">2.000h+</div>
-            <div class="stat-label">De Conteúdo Expert Processado</div>
+            <div class="stat-number">26</div>
+            <div class="stat-label">Fontes Expert Processadas</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">1.000+</div>
+            <div class="stat-label">Arquivos no Sistema</div>
           </div>
           <div class="stat">
             <div class="stat-number">37</div>
@@ -888,10 +1019,6 @@
           <div class="stat">
             <div class="stat-number">5</div>
             <div class="stat-label">Camadas de DNA Cognitivo</div>
-          </div>
-          <div class="stat">
-            <div class="stat-number">∞</div>
-            <div class="stat-label">Respostas Operacionais</div>
           </div>
         </div>
 
@@ -966,6 +1093,48 @@
         </div>
       </div>
 
+    </div>
+  </section>
+
+  <!-- ============================================================
+       4 NÍVEIS DE IA
+  ============================================================ -->
+  <section id="niveis">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="tag tag--gold" style="margin-bottom:16px">Framework</div>
+        <h2 class="section-title">Os 4 Níveis de<br><span class="gradient-text">Uso da IA</span></h2>
+        <p class="section-sub">
+          A maioria das pessoas está presa no Nível 1. O Mega Brain opera no Nível 4 — onde está a vantagem real de negócio.
+        </p>
+      </div>
+
+      <div class="niveis-grid reveal">
+        <div class="nivel-card">
+          <div class="nivel-badge nivel-badge-1">1</div>
+          <div class="nivel-title">Uso no Browser</div>
+          <div class="nivel-sub">ChatGPT, Claude ou Gemini direto no navegador. Substitui cerca de 50% das tarefas diárias de texto e pesquisa.</div>
+          <div class="nivel-example">Resumos, e-mails, pesquisas rápidas</div>
+        </div>
+        <div class="nivel-card">
+          <div class="nivel-badge nivel-badge-2">2</div>
+          <div class="nivel-title">Conectado a Ferramentas</div>
+          <div class="nivel-sub">IA integrada ao Google Drive, Notion, planilhas. Lê, escreve e gera relatórios nos seus arquivos em tempo real.</div>
+          <div class="nivel-example">Relatórios automáticos, síntese de documentos</div>
+        </div>
+        <div class="nivel-card">
+          <div class="nivel-badge nivel-badge-3">3</div>
+          <div class="nivel-title">Skills & Automações</div>
+          <div class="nivel-sub">A IA abre o browser, executa tarefas em softwares externos, faz pesquisas, posta conteúdo e envia mensagens.</div>
+          <div class="nivel-example">Automações, apresentações, campanhas</div>
+        </div>
+        <div class="nivel-card nivel-4">
+          <div class="nivel-badge nivel-badge-4">4</div>
+          <div class="nivel-title" style="color:var(--gold2)">Multi-Agentes Autônomos</div>
+          <div class="nivel-sub" style="color:var(--text)">Claude Code rodando localmente com múltiplos agentes especializados coordenados por um orquestrador inteligente.</div>
+          <div class="nivel-example">⚡ É aqui que o Mega Brain opera</div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1210,7 +1379,9 @@
           <div class="agente-tags">
             <span class="agente-tag">Alex Hormozi</span>
             <span class="agente-tag">Cole Gordon</span>
+            <span class="agente-tag">Jeremy Miner</span>
             <span class="agente-tag">Sam Ovens</span>
+            <span class="agente-tag">+18 experts</span>
           </div>
         </div>
 
@@ -1253,6 +1424,125 @@
 
       </div>
 
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FONTES / EXPERTS
+  ============================================================ -->
+  <section id="fontes">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="tag tag--cyan" style="margin-bottom:16px">As Fontes</div>
+        <h2 class="section-title">26 experts mundiais<br><span class="gradient-text">dentro do sistema</span></h2>
+        <p class="section-sub">
+          Mais de 100 dias de curadoria e processamento. Conteúdo que custaria mais de R$ 2 milhões para acessar individualmente — tudo destilado no Mega Brain.
+        </p>
+      </div>
+
+      <div class="fontes-grid reveal">
+        <div class="fonte-card">
+          <div class="fonte-nome">Alex Hormozi</div>
+          <div class="fonte-area">Vendas · Ofertas · Unit Economics</div>
+        </div>
+        <div class="fonte-card">
+          <div class="fonte-nome">Cole Gordon</div>
+          <div class="fonte-area">Fechamento · Outbound · Times de Vendas</div>
+        </div>
+        <div class="fonte-card">
+          <div class="fonte-nome">Jeremy Miner</div>
+          <div class="fonte-area">Psicologia de Vendas · Questionamento</div>
+        </div>
+        <div class="fonte-card">
+          <div class="fonte-nome">Jeremy Haynes</div>
+          <div class="fonte-area">Tráfego Pago · Funis de Marketing</div>
+        </div>
+        <div class="fonte-card">
+          <div class="fonte-nome">Sam Ovens</div>
+          <div class="fonte-area">Consultoria · Posicionamento Premium</div>
+        </div>
+        <div class="fonte-card">
+          <div class="fonte-nome">Alex Becker</div>
+          <div class="fonte-area">Marketing Digital · SaaS · Escala</div>
+        </div>
+        <div class="fonte-card">
+          <div class="fonte-nome">G4 Educação</div>
+          <div class="fonte-area">Gestão · Liderança · Crescimento BR</div>
+        </div>
+        <div class="fonte-card">
+          <div class="fonte-nome">Thiago Finch</div>
+          <div class="fonte-area">Negócios Online · Estratégia Brasil</div>
+        </div>
+        <div class="fonte-card" style="border-style:dashed;display:flex;align-items:center;justify-content:center;min-height:80px">
+          <div style="text-align:center;color:var(--muted)">
+            <div style="font-size:1.8rem;font-weight:800">+18</div>
+            <div style="font-size:0.8rem">outras fontes expert</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fontes-stats reveal">
+        <div class="fs-item">
+          <div class="fs-number">26</div>
+          <div class="fs-label">Fontes de Conhecimento</div>
+        </div>
+        <div class="fs-item">
+          <div class="fs-number">1.000+</div>
+          <div class="fs-label">Arquivos Processados</div>
+        </div>
+        <div class="fs-item">
+          <div class="fs-number">2.000h+</div>
+          <div class="fs-label">De Conteúdo Expert</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VERSÕES (Community vs Premium)
+  ============================================================ -->
+  <section id="versoes">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="tag tag--purple" style="margin-bottom:16px">Versões</div>
+        <h2 class="section-title">Community vs<br><span class="gradient-text--gold">Premium</span></h2>
+        <p class="section-sub">
+          A versão community entrega o sistema. A versão premium entrega o sistema já carregado com todo o conhecimento dos 26 experts.
+        </p>
+      </div>
+
+      <div class="versoes-grid reveal">
+        <div class="versao-card">
+          <div class="versao-header">
+            <span class="versao-icon">🆓</span>
+            <div class="versao-nome">Community</div>
+          </div>
+          <ul class="versao-list">
+            <li><span class="versao-check" style="color:var(--green)">✓</span> Sistema completo (CLI + Templates)</li>
+            <li><span class="versao-check" style="color:var(--green)">✓</span> Skills e Hooks ativos</li>
+            <li><span class="versao-check" style="color:var(--green)">✓</span> Templates de agentes</li>
+            <li><span class="versao-check" style="color:var(--green)">✓</span> Pipeline de processamento</li>
+            <li><span class="versao-check" style="color:var(--muted)">○</span> <span style="color:var(--muted)">Conteúdo expert (você adiciona)</span></li>
+            <li><span class="versao-check" style="color:var(--muted)">○</span> <span style="color:var(--muted)">Agentes pré-carregados</span></li>
+            <li><span class="versao-check" style="color:var(--muted)">○</span> <span style="color:var(--muted)">Base de conhecimento populada</span></li>
+          </ul>
+        </div>
+        <div class="versao-card versao-premium">
+          <div class="versao-header">
+            <span class="versao-icon">⚡</span>
+            <div class="versao-nome">Premium — Money Club</div>
+          </div>
+          <ul class="versao-list">
+            <li><span class="versao-check" style="color:var(--gold2)">✓</span> Tudo da versão community</li>
+            <li><span class="versao-check" style="color:var(--gold2)">✓</span> 26 fontes expert pré-carregadas</li>
+            <li><span class="versao-check" style="color:var(--gold2)">✓</span> 1.000+ arquivos processados</li>
+            <li><span class="versao-check" style="color:var(--gold2)">✓</span> 22+ mind clone agents ativos</li>
+            <li><span class="versao-check" style="color:var(--gold2)">✓</span> Base de conhecimento completa</li>
+            <li><span class="versao-check" style="color:var(--gold2)">✓</span> DNA cognitivo por expert</li>
+            <li><span class="versao-check" style="color:var(--gold2)">✓</span> Skills totalmente construídas</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </section>
 
