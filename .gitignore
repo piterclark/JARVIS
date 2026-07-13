@@ -2,6 +2,19 @@
 .data/
 research/
 
+# === PERSONAL OBSIDIAN VAULT (root-level notes, never public) ===
+*.canvas
+attachments/
+qrcode-google.png
+blueprint_roommate/
+blueprint_sarzedo.txt
+WORKAHOLIC/
+MEGABRAIN-MAP.md
+knowledge/sarzedo.md
+core/intelligence/generate_poster.py
+docs/posters/
+.playwright-mcp/
+
 # === EXTERNAL FRAMEWORKS (NEVER track) ===
 .aios-core/
 bilhon/
